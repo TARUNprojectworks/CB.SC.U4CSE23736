@@ -1,300 +1,184 @@
-# 🔔 Campus Notifications Microservice
+Campus Notifications Microservice
 
-> A production-grade full-stack notification system for campus management, featuring priority inbox, real-time filtering, and comprehensive logging.
+A full stack campus notification system built to help students stay updated with important campus activities such as placements, results, and events. The project includes a priority inbox, filtering, pagination, viewed and unviewed tracking, and structured logging support.
 
-**Roll No:** CB.SC.U4CSE23736  
-**Track:** Frontend  
-**Tech Stack:** React + Vite + Material UI | Node.js + Express | Axios
+Roll Number: CB.SC.U4CSE23736
+Track: Frontend
+Tech Stack: React + Vite + Material UI | Node.js + Express | Axios
 
----
+Project Overview
 
-## 📋 Table of Contents
+This application was developed as part of a frontend evaluation project. The goal was to build a clean, responsive, and user friendly notification platform that can efficiently manage and display campus notifications.
 
-- [Architecture Overview](#architecture-overview)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [API Documentation](#api-documentation)
-- [Setup Instructions](#setup-instructions)
-- [Running the Application](#running-the-application)
-- [Screenshots](#screenshots)
-- [Video Demo Checklist](#video-demo-checklist)
-- [Commit Strategy](#commit-strategy)
+The application allows users to:
 
----
+View all notifications
+Access a priority inbox
+Filter notifications by type
+Track viewed and unviewed notifications
+Navigate through paginated notifications
+Use the application smoothly across desktop and mobile devices
 
-## 🏗 Architecture Overview
+The project also includes a reusable logging middleware for tracking important application events and API activities.
 
-```
-┌──────────────────┐      ┌───────────────────┐      ┌────────────────────┐
-│  React Frontend  │─────▶│  Express Backend   │─────▶│  Evaluation API    │
-│  localhost:3000   │      │  localhost:5000     │      │  External Service  │
-└──────────────────┘      └───────────────────┘      └────────────────────┘
-         │                          │                          ▲
-         └──────────────────────────┴──────── Log API ────────┘
-```
+Architecture Overview
+React Frontend  →  Express Backend  →  External Evaluation APIs
+        │                 │
+        └──────── Logging Middleware ────────┘
 
-- **Frontend**: React SPA with Material UI, Axios, React Router
-- **Backend**: Express API server with controller/service architecture
-- **Logging**: Shared middleware for structured log delivery
-- **Priority Engine**: Custom sorting algorithm with weight-based ranking
+Frontend:
 
----
+Built using React, Vite, and Material UI
+Includes reusable components and responsive layouts
 
-## 📁 Project Structure
+Backend:
 
-```
+Built using Node.js and Express
+Handles API communication, filtering, pagination, and priority sorting
+
+Logging Middleware:
+
+Handles structured logs
+Sends logs to the external logging API
+Prevents logging failures from affecting the application
+Project Structure
 CB.SC.U4CSE23736/
-│
+
 ├── .gitignore
 ├── README.md
 ├── notification_system_design.md
-│
+
 ├── logging_middleware/
-│   ├── index.js              # Public API
-│   └── logger.js             # Core logger with validation
-│
+│   ├── index.js
+│   └── logger.js
+
 ├── notification_app_be/
-│   ├── .env                  # Environment variables
+│   ├── .env
 │   ├── package.json
-│   ├── server.js             # Express entry point
+│   ├── server.js
 │   ├── config/
-│   │   └── index.js          # Centralized configuration
 │   ├── controllers/
-│   │   └── notificationController.js
 │   ├── middleware/
-│   │   ├── auth.js           # Authentication middleware
-│   │   ├── errorHandler.js   # Centralized error handling
-│   │   └── requestLogger.js  # HTTP request logging
 │   ├── routes/
-│   │   └── notificationRoutes.js
 │   ├── services/
-│   │   └── notificationService.js
 │   └── utils/
-│       ├── apiClient.js      # Axios instance for external API
-│       └── prioritySort.js   # Priority sorting algorithm
-│
+
 └── notification_app_fe/
-    ├── .env                  # Vite environment variables
+    ├── .env
     ├── package.json
     ├── vite.config.js
-    ├── index.html
-    └── src/
-        ├── main.jsx
-        ├── App.jsx
-        ├── api/
-        │   ├── axiosInstance.js
-        │   └── notificationApi.js
-        ├── components/
-        │   ├── DashboardCards.jsx
-        │   ├── EmptyState.jsx
-        │   ├── ErrorState.jsx
-        │   ├── FilterBar.jsx
-        │   ├── LoadingSkeleton.jsx
-        │   ├── Navbar.jsx
-        │   ├── NotificationCard.jsx
-        │   ├── PaginationComponent.jsx
-        │   └── Sidebar.jsx
-        ├── constants/
-        │   └── index.js
-        ├── context/
-        │   └── NotificationContext.jsx
-        ├── hooks/
-        │   ├── useNotifications.js
-        │   └── useViewedStatus.js
-        ├── layouts/
-        │   └── MainLayout.jsx
-        ├── pages/
-        │   ├── AllNotifications.jsx
-        │   ├── Dashboard.jsx
-        │   └── PriorityNotifications.jsx
-        ├── routes/
-        │   └── AppRoutes.jsx
-        ├── services/
-        │   └── logService.js
-        ├── styles/
-        │   └── theme.js
-        └── utils/
-            └── formatters.js
-```
+    ├── src/
+Features
+Frontend Features
+Dashboard with notification statistics
+Priority notification inbox
+Notification filtering
+Pagination support
+Viewed and unviewed tracking
+Responsive design for desktop and mobile
+Loading states and error handling
+Reusable Material UI components
+Backend Features
+Priority sorting logic
+Filtering support
+Pagination support
+Centralized error handling
+API request handling
+Bearer token authentication
+Logging Features
+Structured logging system
+Async log delivery
+Validation for log parameters
+Graceful failure handling
+Reusable logging utilities
+API Endpoints
+Backend Routes
+Method	Endpoint	Purpose
+GET	/api/notifications	Fetch paginated notifications
+GET	/api/notifications/priority	Fetch priority notifications
+GET	/api/notifications/filter	Fetch filtered notifications
+GET	/api/health	Health check
+External APIs
+Method	Endpoint	Purpose
+POST	/register	Registration
+POST	/auth	Authentication
+GET	/notifications	Fetch notifications
+POST	/logs	Send logs
+Setup Instructions
+Prerequisites
 
----
+Install the following before running the project:
 
-## ✨ Features
-
-### Frontend
-- 📊 **Dashboard** with statistics cards and recent notifications
-- 📋 **All Notifications** with pagination and type filtering
-- ⭐ **Priority Inbox** showing top-10 ranked notifications
-- 👁 **Viewed/Unviewed** tracking with localStorage persistence
-- 🎨 **Premium Dark UI** with Material UI components
-- 📱 **Fully Responsive** (mobile, tablet, desktop)
-- 🔄 **Loading Skeletons** and error/empty states
-- 🔔 **Unread Badge** in navbar
-
-### Backend
-- 🔀 **Priority Sorting** algorithm (Placement > Result > Event)
-- 🔍 **Filtering** by notification type
-- 📄 **Pagination** with configurable page size
-- 🛡 **Centralized Error Handling**
-- 📝 **Request/Response Logging**
-- 🔐 **Bearer Token Authentication**
-
-### Logging
-- 📤 Structured log delivery to evaluation API
-- 🔒 Parameter validation against allowed enums
-- 🛡 Graceful failure — logging never crashes the app
-- 🔄 Async, non-blocking log dispatch
-
----
-
-## 📡 API Documentation
-
-### Backend Endpoints
-
-| Method | Endpoint | Query Params | Description |
-|--------|----------|-------------|-------------|
-| GET | `/api/notifications` | `page`, `limit` | Paginated notifications |
-| GET | `/api/notifications/priority` | `limit` | Top-N priority sorted |
-| GET | `/api/notifications/filter` | `notification_type`, `page`, `limit` | Filtered by type |
-| GET | `/api/health` | — | Health check |
-
-### External API
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/register` | Registration |
-| POST | `/auth` | Authentication |
-| GET | `/notifications` | Fetch notifications |
-| POST | `/logs` | Send log entries |
-
----
-
-## 🚀 Setup Instructions
-
-### Prerequisites
-
-- Node.js ≥ 18.x
-- npm ≥ 9.x
-- Git
-
-### 1. Clone the Repository
-
-```bash
+Node.js
+npm
+Git
+Clone the Repository
 git clone https://github.com/TARUNprojectworks/CB.SC.U4CSE23736.git
+
 cd CB.SC.U4CSE23736
-```
-
-### 2. Install Backend Dependencies
-
-```bash
+Install Backend Dependencies
 cd notification_app_be
+
 npm install
-```
-
-### 3. Install Frontend Dependencies
-
-```bash
+Install Frontend Dependencies
 cd ../notification_app_fe
+
 npm install
-```
-
-### 4. Configure Environment Variables
-
-Backend `.env` and Frontend `.env` are pre-configured. Verify they exist:
-
-```bash
-# Backend
-cat notification_app_be/.env
-
-# Frontend
-cat notification_app_fe/.env
-```
-
----
-
-## ▶️ Running the Application
-
-### Start Backend (Terminal 1)
-
-```bash
+Running the Application
+Start Backend
 cd notification_app_be
+
 npm run dev
-```
 
-Server starts at: `http://localhost:5000`
+Backend runs on:
 
-### Start Frontend (Terminal 2)
-
-```bash
+http://localhost:5000
+Start Frontend
 cd notification_app_fe
+
 npm run dev
-```
 
-App opens at: `http://localhost:3000`
+Frontend runs on:
 
----
+http://localhost:3000
+Screenshots to Include
 
-## 📸 Screenshots
+Capture screenshots for:
 
-Capture the following screenshots for documentation:
+Desktop dashboard
+Mobile responsive layout
+All notifications page
+Priority inbox
+Filtering functionality
+Pagination
+Loading states
+API responses
+Logging API responses
+Video Demo Checklist
 
-| # | Screenshot | Description |
-|---|-----------|-------------|
-| 1 | Desktop Dashboard | Full dashboard with stats cards |
-| 2 | Mobile Dashboard | Responsive mobile layout |
-| 3 | All Notifications | Notification list with filters |
-| 4 | Priority Notifications | Top-10 priority inbox |
-| 5 | Filtering | Active filter chips |
-| 6 | Pagination | Pagination controls |
-| 7 | Loading States | Skeleton loaders |
-| 8 | API Responses | Backend JSON responses |
-| 9 | Logging API | Successful log submissions |
+The demo should include:
 
----
+Responsive UI
+Filtering notifications
+Pagination
+Priority inbox
+Viewed and unviewed tracking
+API integration
+Logging middleware
+Error handling
+Loading states
+Suggested Commit Flow
+1. Initial project setup
+2. Logging middleware setup
+3. Backend configuration
+4. Notification service integration
+5. Frontend setup
+6. UI component creation
+7. Responsive design improvements
+8. Priority inbox implementation
+9. Filtering and pagination
+10. Documentation updates
+11. Final cleanup
+Conclusion
 
-## 🎥 Video Demo Checklist
-
-- [ ] Responsive UI (desktop → tablet → mobile)
-- [ ] Filter by Event, Result, Placement
-- [ ] Pagination navigation
-- [ ] Viewed/Unviewed status tracking
-- [ ] Priority sorting with ranked cards
-- [ ] API integration (network tab)
-- [ ] Logging middleware (POST /logs)
-- [ ] Error handling (disconnect backend)
-- [ ] Empty state (apply strict filter)
-- [ ] Loading states (skeleton loaders)
-
----
-
-## 📝 Commit Strategy
-
-```
-1. feat: initialize project structure and .gitignore
-2. feat: implement logging middleware
-3. feat: add backend configuration and server setup
-4. feat: implement notification service and priority sort
-5. feat: add backend routes and controllers
-6. feat: scaffold frontend with Vite and Material UI theme
-7. feat: implement axios instance and API layer
-8. feat: add notification hooks and context
-9. feat: create reusable UI components
-10. feat: implement Dashboard page
-11. feat: implement All Notifications page with filtering and pagination
-12. feat: implement Priority Notifications page
-13. feat: add responsive layout (Navbar, Sidebar, MainLayout)
-14. feat: integrate frontend logging service
-15. docs: add system design document
-16. docs: add README with setup instructions
-17. chore: final review and polish
-```
-
----
-
-## 📄 License
-
-MIT License — CB.SC.U4CSE23736
-
----
-
-*Built with ❤️ for the Campus Notifications Microservice evaluation.*
+This project focuses on building a scalable and user friendly campus notification platform while following clean frontend engineering practices such as reusable components, responsive design, modular architecture, and structured logging.
